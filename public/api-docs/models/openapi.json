@@ -1,0 +1,648 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "MiW User REST API",
+    "description": "[UPM] MiW User REST API operations",
+    "license": {
+      "name": "MIT License",
+      "url": "https://opensource.org/licenses/MIT"
+    },
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/login_check": {
+      "post": {
+        "tags": [
+          "login"
+        ],
+        "summary": "Returns UPM18 api token",
+        "description": "Returns UPM18 api token.",
+        "operationId": "miw_post_login",
+        "responses": {
+          "200": {
+            "description": "Results api token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                  }
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "type": "object",
+                  "example": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401_Unauthorized_Response"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "_username": {
+                    "description": "User name",
+                    "type": "string"
+                  },
+                  "_password": {
+                    "description": "User password",
+                    "type": "string",
+                    "format": "password"
+                  }
+                },
+                "required": [
+                  "_username",
+                  "_password"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Returns all users",
+        "description": "Returns all users from the system that the user has access to.",
+        "operationId": "miw_cget_users",
+        "responses": {
+          "200": {
+            "description": "User array response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsersArray"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsersArray"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsersArray"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401_Unauthorized_Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Forbidden_Response"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Creates a new user",
+        "description": "Creates a new user",
+        "operationId": "miw_post_users",
+        "responses": {
+          "201": {
+            "description": "`Created` User created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`Bad Request` Username or email already exists.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401_Unauthorized_Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Forbidden_Response"
+          },
+          "422": {
+            "description": "`Unprocessable entity` Username, e-mail or password is left out",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserData"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/UserData"
+              }
+            }
+          },
+          "description": "`User` properties to add to the system",
+          "required": true
+        }
+      },
+      "options": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Provides the list of HTTP supported methods",
+        "description": "Return a `Allow` header with a list of HTTP supported methods.",
+        "operationId": "miw_options_users",
+        "responses": {
+          "200": {
+            "description": "`Allow` header ",
+            "headers": {
+              "allow": {
+                "description": "List of HTTP supported methods",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Returns a user based on a single ID",
+        "description": "Returns the user identified by `userId`.",
+        "operationId": "miw_get_users",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/userId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401_Unauthorized_Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Forbidden_Response"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Updates a user",
+        "description": "Updates the user identified by `userId`.",
+        "operationId": "miw_put_users",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/userId"
+          }
+        ],
+        "responses": {
+          "209": {
+            "description": "`Content Returned` User previously existed and is now updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "`Bad Request` User name or e-mail already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401_Unauthorized_Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Forbidden_Response"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserData"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/UserData"
+              }
+            }
+          },
+          "description": "`User` data to update",
+          "required": true
+        }
+      },
+      "delete": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Deletes a user",
+        "description": "Deletes the user identified by `userId`.",
+        "operationId": "miw_delete_users",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/userId"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "User deleted"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_Unauthorized_Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Forbidden_Response"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ]
+      },
+      "options": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Provides the list of HTTP supported methods",
+        "description": "Return a `Allow` header with a list of HTTP supported methods.",
+        "operationId": "miw_options_users_id",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/userId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "`Allow` header ",
+            "headers": {
+              "allow": {
+                "description": "List of HTTP supported methods",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "login",
+      "description": "User login"
+    },
+    {
+      "name": "Users",
+      "description": "User management"
+    }
+  ],
+  "servers": [
+    {
+      "url": "http://localhost:8000/api/v1"
+    },
+    {
+      "url": "https://localhost:8000/api/v1"
+    }
+  ],
+  "components": {
+    "parameters": {
+      "userId": {
+        "name": "userId",
+        "in": "path",
+        "description": "ID of user",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "responses": {
+      "401_Unauthorized_Response": {
+        "description": "`Unauthorized` invalid `token` header",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Message"
+            }
+          },
+          "application/xml": {
+            "schema": {
+              "$ref": "#/components/schemas/Message"
+            }
+          },
+          "application/x-yaml": {
+            "schema": {
+              "$ref": "#/components/schemas/Message"
+            }
+          }
+        }
+      },
+      "403_Forbidden_Response": {
+        "description": "`Forbidden` You don't have permission to access",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Message"
+            }
+          },
+          "application/xml": {
+            "schema": {
+              "$ref": "#/components/schemas/Message"
+            }
+          },
+          "application/x-yaml": {
+            "schema": {
+              "$ref": "#/components/schemas/Message"
+            }
+          }
+        }
+      },
+      "404_Resource_Not_Found_Response": {
+        "description": "`Not found` resource not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Message"
+            }
+          },
+          "application/xml": {
+            "schema": {
+              "$ref": "#/components/schemas/Message"
+            }
+          },
+          "application/x-yaml": {
+            "schema": {
+              "$ref": "#/components/schemas/Message"
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "UPM_API_Security": {
+        "type": "apiKey",
+        "name": "token",
+        "in": "header"
+      }
+    },
+    "schemas": {
+      "User": {
+        "required": [
+          "id",
+          "username",
+          "email"
+        ],
+        "properties": {
+          "id": {
+            "description": "User Id",
+            "type": "integer",
+            "format": "int32"
+          },
+          "username": {
+            "description": "User name",
+            "type": "string"
+          },
+          "email": {
+            "description": "User email",
+            "type": "string"
+          },
+          "enabled": {
+            "description": "Denotes if user is enabled",
+            "type": "boolean"
+          },
+          "isAdmin": {
+            "description": "Denotes if user has admin privileges",
+            "type": "boolean"
+          }
+        },
+        "example": {
+          "user": {
+            "id": 1508,
+            "username": "User name",
+            "email": "User email",
+            "enabled": true,
+            "admin": false
+          }
+        }
+      },
+      "UserData": {
+        "properties": {
+          "username": {
+            "description": "User name",
+            "type": "string"
+          },
+          "email": {
+            "description": "User email",
+            "type": "string"
+          },
+          "password": {
+            "description": "User password",
+            "type": "string",
+            "format": "password"
+          },
+          "enabled": {
+            "description": "Denotes if user is enabled",
+            "type": "boolean"
+          },
+          "isAdmin": {
+            "description": "Denotes if user has admin privileges",
+            "type": "boolean"
+          }
+        },
+        "example": {
+          "username": "User_name",
+          "email": "User_email@example.com",
+          "password": "User_password",
+          "enabled": true,
+          "isAdmin": false
+        }
+      },
+      "UsersArray": {
+        "properties": {
+          "users": {
+            "description": "Users array",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            }
+          }
+        }
+      },
+      "Message": {
+        "required": [
+          "code",
+          "message"
+        ],
+        "properties": {
+          "code": {
+            "description": "Response code",
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "description": "Response message",
+            "type": "string"
+          }
+        },
+        "example": {
+          "message": {
+            "code": "HTTP code",
+            "message": "Response Message"
+          }
+        }
+      }
+    }
+  }
+}
