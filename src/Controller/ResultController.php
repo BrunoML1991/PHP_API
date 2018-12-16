@@ -9,7 +9,9 @@
 namespace App\Controller;
 
 use App\Entity\Result;
+use App\Entity\User;
 use App\Errors;
+use App\JWTManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;

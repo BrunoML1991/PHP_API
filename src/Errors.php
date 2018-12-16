@@ -27,6 +27,18 @@ class Errors
         );
     }
 
+    public function error401(): JsonResponse
+    {
+        $mensaje = [
+            'code' => Response::HTTP_UNAUTHORIZED,
+            'message' => 'Unauthorized invalid token header'
+        ];
+        return new JsonResponse(
+            $mensaje,
+            Response::HTTP_UNAUTHORIZED
+        );
+    }
+
     public function error404(): JsonResponse
     {
         $mensaje = [

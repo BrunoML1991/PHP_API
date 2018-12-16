@@ -173,6 +173,8 @@ class UserController extends AbstractController
         if (isset($datos['isAdmin'])){
             $user->setIsAdmin($datos['isAdmin']);
         }
+        $em->persist($user);
+        $em->flush();
         return new JsonResponse($user,209);
     }
 
