@@ -39,6 +39,18 @@ class Errors
         );
     }
 
+    public function error403(): JsonResponse
+    {
+        $mensaje = [
+            'code' => Response::HTTP_FORBIDDEN,
+            'message' => 'Forbidden You don\'t have permission to access'
+        ];
+        return new JsonResponse(
+            $mensaje,
+            Response::HTTP_FORBIDDEN
+        );
+    }
+
     public function error404(): JsonResponse
     {
         $mensaje = [

@@ -11,7 +11,10 @@ namespace App;
 require '../vendor/autoload.php';
 
 use App\Entity\User;
+use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
+use Firebase\JWT\SignatureInvalidException;
+use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Component\Dotenv\Dotenv;
 
 class JWTManager
@@ -25,22 +28,45 @@ class JWTManager
         $this->key = getenv('JWT_KEY');
     }
 
-    public function createToken(User $user)
+    /**
+     * @param User $user
+     * @return string
+     */
+    public function createToken(User $user): string
     {
         $time = time();
         $token = array(
             'iat' => $time,
-            'exp' => $time + (24*60*60),
+            'exp' => $time + (24 * 60 * 60),
             'data' => [
                 'id' => $user->getId(),
                 'isAdmin' => $user->isAdmin()
             ]
         );
-        return JWT::encode($token,$this->key);
+        return JWT::encode($token, $this->key);
     }
 
-    public function get()
+    /**
+     * @param string $token
+     * @return bool
+     */
+    public function isValidToken(string $token): bool
     {
-        return $this->key;
+        try {
+            $data = JWT::decode($token, $this->key, array('HS256'));
+        } catch (SignatureInvalidException $exception) {
+            return false;
+        } catch (ExpiredException $exception) {
+            return false;
+        }
+        return true;
+    }
+
+    public function isAdminUser(string $token)
+    {
+        $data = JWT::decode($token, $this->key, array('HS256'));
+        $data->data->id;
+        $data->data->isAdmin;
+        return $data->data->isAdmin;
     }
 }
