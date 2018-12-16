@@ -93,7 +93,8 @@ class UserController extends AbstractController
      */
     public function optionsUser():JsonResponse
     {
-        return new JsonResponse('Allow header',
+        return new JsonResponse(
+            'Allow header',
             Response::HTTP_OK,
             ['allow'=>Request::METHOD_GET.', '.Request::METHOD_POST]
         );
@@ -106,9 +107,73 @@ class UserController extends AbstractController
      */
     public function optionsOneUser(int $id):JsonResponse
     {
-        return new JsonResponse('Allow header',
+        return new JsonResponse(
+            'Allow header',
             Response::HTTP_OK,
             ['allow'=>Request::METHOD_GET.', '.Request::METHOD_PUT.', '.Request::METHOD_DELETE]
         );
     }
+
+    /**
+     * @Route(path="/{id}",name="delete",methods={Request::METHOD_DELETE})
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function deleteUser(int $id):JsonResponse
+    {
+        /** @var Errors $error */
+        $error = new Errors();
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository(User::class)->find($id);
+        if ($user===null){
+            return $error->error404();
+        }
+        $em->remove($user);
+        $em->flush();
+        return new JsonResponse(
+            null,
+            Response::HTTP_NO_CONTENT
+        );
+    }
+
+    /**
+     * @Route(path="/{id}",name="put",methods={Request::METHOD_PUT})
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function putUser(Request $request,int $id):JsonResponse
+    {
+        /** @var Errors $error */
+        $error = new Errors();
+        $em = $this->getDoctrine()->getManager();
+        $datosPeticion = $request->getContent();
+        $datos = json_decode($datosPeticion, true);
+        /** @var User $user */
+        $user = $em->getRepository(User::class)->find($id);
+        if ($user===null){
+            return $error->error404();
+        }
+        if ($em->getRepository(User::class)->findBy(['username'=>$datos['username']])||
+            $em->getRepository(User::class)->findBy(['email'=>$datos['email']])){
+            return $error->error400();
+        }
+        if (isset($datos['username'])){
+            $user->setUsername($datos['username']);
+        }
+        if (isset($datos['email'])){
+            $user->setEmail($datos['email']);
+        }
+        if (isset($datos['password'])){
+            $user->setPassword($datos['password']);
+        }
+        if (isset($datos['enabled'])){
+            $user->setEnabled($datos['enabled']);
+        }
+        if (isset($datos['isAdmin'])){
+            $user->setIsAdmin($datos['isAdmin']);
+        }
+        return new JsonResponse($user,209);
+    }
+
 }

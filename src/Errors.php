@@ -19,7 +19,7 @@ class Errors
     {
         $mensaje = [
             'code' => Response::HTTP_BAD_REQUEST,
-            'message' => 'Bad Request'
+            'message' => 'Bad Request: User name or e-mail already exists'
         ];
         return new JsonResponse(
             $mensaje,
