@@ -36,7 +36,7 @@ class Result implements \JsonSerializable
     private $time;
 
     /**
-     * @var \Users
+     * @var User
      *
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumns({

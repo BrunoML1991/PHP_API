@@ -435,6 +435,52 @@
           }
         }
       }
+    },
+    "/results": {
+      "get": {
+        "tags": [
+          "Results"
+        ],
+        "summary": "Returns all results",
+        "description": "Returns all results from the system that the user has access to.",
+        "operationId": "miw_cget_results",
+        "responses": {
+          "200": {
+            "description": "Results array response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResulstArray"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResulstArray"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResulstArray"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401_Unauthorized_Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Forbidden_Response"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ]
+      }
     }
   },
   "tags": [
@@ -445,6 +491,10 @@
     {
       "name": "Users",
       "description": "User management"
+    },
+    {
+      "name": "Results",
+      "description": "Result managment"
     }
   ],
   "servers": [
@@ -640,6 +690,55 @@
           "message": {
             "code": "HTTP code",
             "message": "Response Message"
+          }
+        }
+      },
+      "Result": {
+        "required": [
+          "id",
+          "result",
+          "time",
+          "user_id"
+        ],
+        "properties": {
+          "id": {
+            "description": "Result Id",
+            "type": "integer",
+            "format": "int32"
+          },
+          "result": {
+            "description": "Result achieved by user",
+            "type": "integer",
+            "format": "int32"
+          },
+          "time": {
+            "description": "time",
+            "type": "integer",
+            "format": "int32"
+          },
+          "user_id": {
+            "description": "User Id",
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "example": {
+          "result": {
+            "id": 1508,
+            "result": 9,
+            "time": "2018-12-06T18:15:52.000Z",
+            "user_id": 126
+          }
+        }
+      },
+      "ResulstArray": {
+        "properties": {
+          "results": {
+            "description": "Results Array",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Result"
+            }
           }
         }
       }
