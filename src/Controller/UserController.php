@@ -117,10 +117,9 @@ class UserController extends AbstractController
 
     /**
      * @Route(path="/{id}",name="options_id",methods={Request::METHOD_OPTIONS})
-     * @param int id
      * @return JsonResponse
      */
-    public function optionsOneUser(int $id): JsonResponse
+    public function optionsOneUser(): JsonResponse
     {
         return new JsonResponse(
             'Allow header',

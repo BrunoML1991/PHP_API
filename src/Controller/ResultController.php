@@ -28,11 +28,16 @@ class ResultController extends AbstractController
     const RESULT_API_PATH = '/api/v1/results';
 
     /**
+     * @param Request $request
      * @return JsonResponse
      * @Route(path="",name="getc",methods={Request::METHOD_GET})
      */
-    public function getCResult():JsonResponse
+    public function getCResult(Request $request):JsonResponse
     {
+        $authoritation = $this->authorization($request);
+        if ($authoritation !== true) {
+            return $authoritation;
+        }
         /** @var Errors $error */
         $error = new Errors();
         $em = $this->getDoctrine()->getManager();
@@ -42,4 +47,18 @@ class ResultController extends AbstractController
             : $error->error404();
     }
 
+    private function authorization(Request $request)
+    {
+        /** @var Errors $error */
+        $error = new Errors();
+        $jwtManager = new JWTManager();
+        $token = $request->headers->get('token');
+        if ($token === null || !$jwtManager->isValidToken($token)) {
+            return $error->error401();
+        }
+        if (!$jwtManager->isAdminUser($token)) {
+            return $error->error403();
+        }
+        return true;
+    }
 }
