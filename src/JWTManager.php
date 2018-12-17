@@ -8,13 +8,10 @@
 
 namespace App;
 
-require '../vendor/autoload.php';
-
 use App\Entity\User;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
 use Firebase\JWT\SignatureInvalidException;
-use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Component\Dotenv\Dotenv;
 
 class JWTManager

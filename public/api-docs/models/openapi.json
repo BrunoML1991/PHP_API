@@ -480,6 +480,81 @@
             "UPM_API_Security": []
           }
         ]
+      },
+      "post": {
+        "tags": [
+          "Results"
+        ],
+        "summary": "Creates a new result",
+        "description": "Create a new result",
+        "operationId": "miw_post_results",
+        "responses": {
+          "201": {
+            "description": "`Created` Result created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401_Unauthorized_Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Forbidden_Response"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
+          },
+          "422": {
+            "description": "`Unprocessable entity` Result or user_id is left out",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResultData"
+              }
+            }
+          },
+          "description": "Result properties to add to the system",
+          "required": true
+        }
       }
     }
   },
@@ -740,6 +815,28 @@
               "$ref": "#/components/schemas/Result"
             }
           }
+        }
+      },
+      "ResultData": {
+        "required": [
+          "result",
+          "user_id"
+        ],
+        "properties": {
+          "result": {
+            "description": "Result achieved by user",
+            "type": "integer",
+            "format": "int32"
+          },
+          "user_id": {
+            "description": "User Id",
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "example": {
+          "result": 9,
+          "user_id": 126
         }
       }
     }
