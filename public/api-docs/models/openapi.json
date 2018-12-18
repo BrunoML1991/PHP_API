@@ -555,6 +555,27 @@
           "description": "Result properties to add to the system",
           "required": true
         }
+      },
+      "options": {
+        "tags": [
+          "Results"
+        ],
+        "summary": "Provides the list of HTTP supported methods",
+        "description": "Return a `Allow` header with a list of HTTP supported methods.",
+        "operationId": "miw_options_results",
+        "responses": {
+          "200": {
+            "description": "`Allow` header ",
+            "headers": {
+              "allow": {
+                "description": "List of HTTP supported methods",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
       }
     }
   },

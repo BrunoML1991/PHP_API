@@ -83,6 +83,19 @@ class ResultController extends AbstractController
         return new JsonResponse(['result'=>$result],Response::HTTP_CREATED);
     }
 
+    /**
+     * @return JsonResponse
+     * @Route(path="",name="options",methods={Request::METHOD_OPTIONS})
+     */
+    public function optionsResult():JsonResponse
+    {
+        return new JsonResponse(
+            'Allow header',
+            Response::HTTP_OK,
+            ['allow' => Request::METHOD_GET . ', ' . Request::METHOD_POST]
+        );
+    }
+
     private function authorization(Request $request)
     {
         /** @var Errors $error */
