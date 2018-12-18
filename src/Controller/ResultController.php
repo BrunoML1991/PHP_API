@@ -175,6 +175,33 @@ class ResultController extends AbstractController
         return new JsonResponse(['changed result'=>$result], 209);
     }
 
+    /**
+     * @param int $id
+     * @param Request $request
+     * @return JsonResponse
+     * @Route(path="/{id}",name="delete",methods={Request::METHOD_DELETE})
+     */
+    public function deleteResult(int $id, Request $request):JsonResponse
+    {
+        $authoritation = $this->authorization($request);
+        if ($authoritation !== true) {
+            return $authoritation;
+        }
+        /** @var Errors $error */
+        $error = new Errors();
+        $em = $this->getDoctrine()->getManager();
+        $result = $em->getRepository(Result::class)->find($id);
+        if ($result===null){
+            return $error->error404();
+        }
+        $em->remove($result);
+        $em->flush();
+        return new JsonResponse(
+            null,
+            Response::HTTP_NO_CONTENT
+        );
+    }
+
     private function authorization(Request $request)
     {
         /** @var Errors $error */

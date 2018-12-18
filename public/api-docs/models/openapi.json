@@ -758,6 +758,38 @@
           "description": "`Result` data to update",
           "required": true
         }
+      },
+      "delete": {
+        "tags": [
+          "Results"
+        ],
+        "summary": "Deletes a result",
+        "description": "Deletes the result identified by `resultId`.",
+        "operationId": "miw_delete_result",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/resultId"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Result deleted"
+          },
+          "401": {
+            "$ref": "#/components/responses/401_Unauthorized_Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Forbidden_Response"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ]
       }
     }
   },
