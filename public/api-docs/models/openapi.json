@@ -678,6 +678,86 @@
             "UPM_API_Security": []
           }
         ]
+      },
+      "put": {
+        "tags": [
+          "Results"
+        ],
+        "summary": "Updates a result",
+        "description": "Updates the result identified by `resultId`.",
+        "operationId": "miw_put_result",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/resultId"
+          }
+        ],
+        "responses": {
+          "209": {
+            "description": "`Content Returned` Result previously existed and is now updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401_Unauthorized_Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Forbidden_Response"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
+          },
+          "422": {
+            "description": "`Unprocessable Entity` result not found in body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResultDataResult"
+              }
+            }
+          },
+          "description": "`Result` data to update",
+          "required": true
+        }
       }
     }
   },
@@ -970,6 +1050,21 @@
         "example": {
           "result": 9,
           "user_id": 126
+        }
+      },
+      "ResultDataResult": {
+        "required": [
+          "result"
+        ],
+        "properties": {
+          "result": {
+            "description": "Result achieved by user",
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "example": {
+          "result": 9
         }
       }
     }

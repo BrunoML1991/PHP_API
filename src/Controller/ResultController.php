@@ -12,7 +12,6 @@ use App\Entity\Result;
 use App\Entity\User;
 use App\Errors;
 use App\JWTManager;
-use phpDocumentor\Reflection\DocBlock\Tags\Uses;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -101,7 +100,7 @@ class ResultController extends AbstractController
      * @param int $id
      * @param Request $request
      * @return JsonResponse
-     * @Route(path="/user/{id}",name="get_user")
+     * @Route(path="/user/{id}",name="get_user",methods={Request::METHOD_GET})
      */
     public function getResultForUser(int $id, Request $request): JsonResponse
     {
@@ -126,7 +125,7 @@ class ResultController extends AbstractController
      * @param int $id
      * @param Request $request
      * @return JsonResponse
-     * @Route(path="/{id}",name="get")
+     * @Route(path="/{id}",name="get",methods={Request::METHOD_GET})
      */
     public function getResult(int $id, Request $request): JsonResponse
     {
@@ -141,6 +140,39 @@ class ResultController extends AbstractController
         return ($result !== null)
             ? new JsonResponse(['result' => $result])
             : $error->error404();
+    }
+
+    /**
+     * @param int $id
+     * @param Request $request
+     * @return JsonResponse
+     * @Route(path="/{id}",name="put",methods={Request::METHOD_PUT})
+     * @throws \Exception
+     */
+    public function putResult(int $id, Request $request):JsonResponse
+    {
+        $authoritation = $this->authorization($request);
+        if ($authoritation !== true) {
+            return $authoritation;
+        }
+        /** @var Errors $error */
+        $error = new Errors();
+        $em = $this->getDoctrine()->getManager();
+        $datosPeticion = $request->getContent();
+        $datos = json_decode($datosPeticion, true);
+        /** @var Result $result */
+        $result = $em->getRepository(Result::class)->find($id);
+        if ($result===null){
+            return $error->error404();
+        }
+        if (!isset($datos['result'])){
+            return $error->error422();
+        }
+        $result->setResult($datos['result']);
+        $result->setTime(new \DateTime('now'));
+        $em->persist($result);
+        $em->flush();
+        return new JsonResponse(['changed result'=>$result], 209);
     }
 
     private function authorization(Request $request)

@@ -67,7 +67,7 @@ class Errors
     {
         $mensaje = [
             'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
-            'message' => 'Unprocesable Entity'
+            'message' => 'Unprocessable Entity'
         ];
         return new JsonResponse(
             $mensaje,
