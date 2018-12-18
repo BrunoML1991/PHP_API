@@ -12,6 +12,7 @@ use App\Entity\Result;
 use App\Entity\User;
 use App\Errors;
 use App\JWTManager;
+use phpDocumentor\Reflection\DocBlock\Tags\Uses;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,7 +34,7 @@ class ResultController extends AbstractController
      * @return JsonResponse
      * @Route(path="",name="getc",methods={Request::METHOD_GET})
      */
-    public function getCResult(Request $request):JsonResponse
+    public function getCResult(Request $request): JsonResponse
     {
         $authoritation = $this->authorization($request);
         if ($authoritation !== true) {
@@ -54,7 +55,7 @@ class ResultController extends AbstractController
      * @throws \Exception
      * @Route(path="",name="post",methods={Request::METHOD_POST})
      */
-    public function postResult(Request $request):JsonResponse
+    public function postResult(Request $request): JsonResponse
     {
         $authoritation = $this->authorization($request);
         if ($authoritation !== true) {
@@ -65,7 +66,7 @@ class ResultController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $datosPeticion = $request->getContent();
         $datos = json_decode($datosPeticion, true);
-        if (!array_key_exists('result', $datos) || !array_key_exists('user_id', $datos) ) {
+        if (!array_key_exists('result', $datos) || !array_key_exists('user_id', $datos)) {
             return $error->error422();
         }
         /** @var User $user */
@@ -80,20 +81,66 @@ class ResultController extends AbstractController
         );
         $em->persist($result);
         $em->flush();
-        return new JsonResponse(['result'=>$result],Response::HTTP_CREATED);
+        return new JsonResponse(['result' => $result], Response::HTTP_CREATED);
     }
 
     /**
      * @return JsonResponse
      * @Route(path="",name="options",methods={Request::METHOD_OPTIONS})
      */
-    public function optionsResult():JsonResponse
+    public function optionsResult(): JsonResponse
     {
         return new JsonResponse(
             'Allow header',
             Response::HTTP_OK,
             ['allow' => Request::METHOD_GET . ', ' . Request::METHOD_POST]
         );
+    }
+
+    /**
+     * @param int $id
+     * @param Request $request
+     * @return JsonResponse
+     * @Route(path="/user/{id}",name="get_user")
+     */
+    public function getResultForUser(int $id, Request $request): JsonResponse
+    {
+        $authoritation = $this->authorization($request);
+        if ($authoritation !== true) {
+            return $authoritation;
+        }
+        /** @var Errors $error */
+        $error = new Errors();
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository(User::class)->find($id);
+        if ($user === null) {
+            return $error->error404();
+        }
+        $results = $em->getRepository(Result::class)->findBy(['user'=>$user]);
+        return ($results !== null)
+            ? new JsonResponse(['results' => $results])
+            : $error->error404();
+    }
+
+    /**
+     * @param int $id
+     * @param Request $request
+     * @return JsonResponse
+     * @Route(path="/{id}",name="get")
+     */
+    public function getResult(int $id, Request $request): JsonResponse
+    {
+        $authoritation = $this->authorization($request);
+        if ($authoritation !== true) {
+            return $authoritation;
+        }
+        /** @var Errors $error */
+        $error = new Errors();
+        $em = $this->getDoctrine()->getManager();
+        $result = $em->getRepository(Result::class)->find($id);
+        return ($result !== null)
+            ? new JsonResponse(['result' => $result])
+            : $error->error404();
     }
 
     private function authorization(Request $request)

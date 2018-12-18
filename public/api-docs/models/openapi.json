@@ -450,17 +450,17 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResulstArray"
+                  "$ref": "#/components/schemas/ResultsArray"
                 }
               },
               "application/xml": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResulstArray"
+                  "$ref": "#/components/schemas/ResultsArray"
                 }
               },
               "application/x-yaml": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResulstArray"
+                  "$ref": "#/components/schemas/ResultsArray"
                 }
               }
             }
@@ -577,6 +577,108 @@
           }
         }
       }
+    },
+    "/results/user/{userId}": {
+      "get": {
+        "tags": [
+          "Results"
+        ],
+        "summary": "Returns all results for a user based on a single User ID",
+        "description": "Returns all results that match one `userId`.",
+        "operationId": "miw_get_results_user",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/userId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultsArray"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultsArray"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultsArray"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401_Unauthorized_Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Forbidden_Response"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ]
+      }
+    },
+    "/results/{resultId}": {
+      "get": {
+        "tags": [
+          "Results"
+        ],
+        "summary": "Returns a result based on a single ID",
+        "description": "Returns the result identified by `userId`.",
+        "operationId": "miw_get_results",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/resultId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/401_Unauthorized_Response"
+          },
+          "403": {
+            "$ref": "#/components/responses/403_Forbidden_Response"
+          },
+          "404": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ]
+      }
     }
   },
   "tags": [
@@ -607,6 +709,16 @@
         "name": "userId",
         "in": "path",
         "description": "ID of user",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "resultId": {
+        "name": "resultId",
+        "in": "path",
+        "description": "ID of result",
         "required": true,
         "schema": {
           "type": "integer",
@@ -827,7 +939,7 @@
           }
         }
       },
-      "ResulstArray": {
+      "ResultsArray": {
         "properties": {
           "results": {
             "description": "Results Array",
