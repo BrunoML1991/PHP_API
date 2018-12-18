@@ -115,7 +115,7 @@ class ResultController extends AbstractController
         if ($user === null) {
             return $error->error404();
         }
-        $results = $em->getRepository(Result::class)->findBy(['user'=>$user]);
+        $results = $em->getRepository(Result::class)->findBy(['user' => $user]);
         return ($results !== null)
             ? new JsonResponse(['results' => $results])
             : $error->error404();
@@ -149,7 +149,7 @@ class ResultController extends AbstractController
      * @Route(path="/{id}",name="put",methods={Request::METHOD_PUT})
      * @throws \Exception
      */
-    public function putResult(int $id, Request $request):JsonResponse
+    public function putResult(int $id, Request $request): JsonResponse
     {
         $authoritation = $this->authorization($request);
         if ($authoritation !== true) {
@@ -162,17 +162,17 @@ class ResultController extends AbstractController
         $datos = json_decode($datosPeticion, true);
         /** @var Result $result */
         $result = $em->getRepository(Result::class)->find($id);
-        if ($result===null){
+        if ($result === null) {
             return $error->error404();
         }
-        if (!isset($datos['result'])){
+        if (!isset($datos['result'])) {
             return $error->error422();
         }
         $result->setResult($datos['result']);
         $result->setTime(new \DateTime('now'));
         $em->persist($result);
         $em->flush();
-        return new JsonResponse(['changed result'=>$result], 209);
+        return new JsonResponse(['changed result' => $result], 209);
     }
 
     /**
@@ -181,7 +181,7 @@ class ResultController extends AbstractController
      * @return JsonResponse
      * @Route(path="/{id}",name="delete",methods={Request::METHOD_DELETE})
      */
-    public function deleteResult(int $id, Request $request):JsonResponse
+    public function deleteResult(int $id, Request $request): JsonResponse
     {
         $authoritation = $this->authorization($request);
         if ($authoritation !== true) {
@@ -191,7 +191,7 @@ class ResultController extends AbstractController
         $error = new Errors();
         $em = $this->getDoctrine()->getManager();
         $result = $em->getRepository(Result::class)->find($id);
-        if ($result===null){
+        if ($result === null) {
             return $error->error404();
         }
         $em->remove($result);
@@ -199,6 +199,19 @@ class ResultController extends AbstractController
         return new JsonResponse(
             null,
             Response::HTTP_NO_CONTENT
+        );
+    }
+
+    /**
+     * @return JsonResponse
+     * @Route(path="/{id}",name="options_id",methods={Request::METHOD_OPTIONS})
+     */
+    public function optionsOneResult(): JsonResponse
+    {
+        return new JsonResponse(
+            'Allow header',
+            Response::HTTP_OK,
+            ['allow' => Request::METHOD_GET . ', ' . Request::METHOD_PUT . ', ' . Request::METHOD_DELETE]
         );
     }
 
