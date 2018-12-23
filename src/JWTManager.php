@@ -20,9 +20,7 @@ class JWTManager
 
     public function __construct()
     {
-        $dotenv = new Dotenv();
-        $dotenv->load('../.env');
-        $this->key = getenv('JWT_KEY');
+        $this->key = '80dbd0a815355c47b8b6f2b65464bea';
     }
 
     /**
