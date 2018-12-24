@@ -10,6 +10,7 @@ namespace App\Tests\Controller;
 
 
 use App\Controller\LoginController;
+use App\Controller\UserController;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,6 +29,7 @@ class LoginControllerTest extends WebTestCase
     public static function setUpBeforeClass()
     {
         self::$client = static::createClient();
+        self::$client->request(Request::METHOD_POST,UserController::USER_API_PATH.'setUpTests');
     }
 
     /**

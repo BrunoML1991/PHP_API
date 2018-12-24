@@ -31,6 +31,7 @@ class UserControllerTest extends WebTestCase
     public static function setUpBeforeClass()
     {
         self::$client = static::createClient();
+        self::$client->request(Request::METHOD_POST,UserController::USER_API_PATH.'setUpTests');
         self::$client->request(Request::METHOD_POST, LoginController::LOGIN_API_PATH, array(), array(),
             array('CONTENT_TYPE' => 'application/json'), '{"_username":"bruno","_password":"aaa"}');
         self::$token = json_decode(self::$client->getResponse()->getContent())->token;

@@ -207,6 +207,40 @@ class UserController extends AbstractController
         return new JsonResponse(['user' => $user], 209);
     }
 
+    /**
+     * @Route(path="setUpTests",name="setUpTests",methods={Request::METHOD_POST})
+     */
+    public function setUpTests(): JsonResponse
+    {
+        $userAdmin = null;
+        $userNotAdmin = null;
+        $em = $this->getDoctrine()->getManager();
+        if (!$em->getRepository(User::class)->findBy(['username' => 'bruno'])) {
+            $userAdmin = new User(
+                'bruno',
+                'bruno@bruno.com',
+                'aaa',
+                true,
+                true
+            );
+        }
+        if (!$em->getRepository(User::class)->findBy(['username' => 'aaa'])) {
+            $userNotAdmin = new User(
+                'aaa',
+                'aaa@aaa.com',
+                'aaa',
+                true,
+                false
+            );
+        }
+        if ($userAdmin !== null || $userNotAdmin !== null) {
+            $em->persist($userAdmin);
+            $em->persist($userNotAdmin);
+            $em->flush();
+        }
+        return new JsonResponse([], 200);
+    }
+
     private function authorization(Request $request)
     {
         /** @var Errors $error */
