@@ -204,7 +204,7 @@ class UserController extends AbstractController
         }
         $em->persist($user);
         $em->flush();
-        return new JsonResponse($user, 209);
+        return new JsonResponse(['user' => $user], 209);
     }
 
     private function authorization(Request $request)

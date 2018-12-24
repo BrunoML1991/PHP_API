@@ -172,7 +172,7 @@ class ResultController extends AbstractController
         $result->setTime(new \DateTime('now'));
         $em->persist($result);
         $em->flush();
-        return new JsonResponse(['changed result' => $result], 209);
+        return new JsonResponse(['result' => $result], 209);
     }
 
     /**
